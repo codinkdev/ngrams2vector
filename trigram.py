@@ -242,6 +242,28 @@ def generate_normalized_vector(sparse_sequence, m, n):
         return double_vector
     return double_vector / norm
 
+import re
+
+def generate_ngrams(text, n):
+    # filtrar los caracteres no deseados de la cadena de entrada y convertir a mayúsculas
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    text = text.upper()
+
+    # obtener la longitud del texto
+    text_length = len(text)
+
+    # generar el set de n-gramas únicos
+    ngrams = set()
+    symbol_count = 27 # letras mayúsculas más espacio
+    for i in range(text_length - n + 1):
+        ngram = text[i:i+n]
+        ngram_value = 0
+        for j, symbol in enumerate(ngram):
+            symbol_value = ord(symbol) - ord('A') + 1 if symbol != ' ' else 0
+            ngram_value += symbol_value * (symbol_count ** (n - j - 1))
+        ngrams.add(ngram_value)
+
+    return ngrams
 
 
 print(generate_normalized_vector([1,2,3,10,12], 16,2))
