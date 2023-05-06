@@ -1,6 +1,8 @@
 import string
 import math
 import re
+import numpy as np
+
 
 class Trigram:
            
@@ -177,48 +179,15 @@ class Ngram:
         return cleanedlist
  
 
-
-####################### MAIN ################################
-### Un ejemplo
-
-t1 = Ngram("Julio Raffo, Lautaro Matas",2)
-t2 = Ngram("Julio Raffo, Rodriguez Lautaro",2)
-print (t1.compare(t2))
-
-
-def generate_double_vector(sparse_sequence, m, n):
-    # obtener la longitud de la secuencia
-    sequence_length = m
-
-    # inicializar el vector de salida
-    double_vector = []
-
-    # dividir la secuencia de bits en bloques de n bits y agregar cada bloque al vector de salida como un número de punto flotante
-    current_block = ''
-    for i in range(sequence_length):
-        if i in sparse_sequence:
-            current_block += '1'
-        else:
-            current_block += '0'
-        if (i+1) % n == 0:
-            double_vector.append(float(int(current_block, 2)))
-            current_block = ''
-
-    # si la última secuencia no tiene n bits, agregar ceros para completar el último bloque y agregar el último bloque al vector de salida
-    if current_block:
-        current_block += '0' * (n - len(current_block))
-        double_vector.append(float(int(current_block, 2)))
-
-    return double_vector
-
-import numpy as np
-
 def generate_normalized_vector(sparse_sequence, m, n):
     # obtener la longitud de la secuencia
     sequence_length = m
 
+    vector_length = 1 + (sequence_length // n)
+    print(vector_length)
+
     # crear un array numpy de ceros del tamaño adecuado
-    double_vector = np.zeros(sequence_length // n, dtype=np.float64)
+    double_vector = np.zeros(vector_length, dtype=np.float64)
 
     # agregar cada bloque al vector de salida
     current_block = ''
@@ -266,4 +235,10 @@ def generate_ngrams(text, n):
     return ngrams
 
 
-print(generate_normalized_vector([1,2,3,10,12], 16,2))
+if __name__ == "__main__":
+
+    t1 = Ngram("Julio Raffo, Lautaro Matas",2)
+    t2 = Ngram("Julio Raffo, Rodriguez Lautaro",2)
+    print (t1.compare(t2))
+
+    print(generate_normalized_vector([1,2,3,10,12], 16,2))
